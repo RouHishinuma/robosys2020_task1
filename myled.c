@@ -3,6 +3,7 @@
 #include <linux/cdev.h>
 #include <linux/device.h>
 #include <linux/uaccess.h>
+#include <linux/io.h>
 MODULE_AUTHOR("Haruki Shimotori and Ryuchi Ueda");
 MODULE_DESCRIPTION("driver for LED control");
 MODULE_LICENSE("GPL");
@@ -11,6 +12,7 @@ MODULE_VERSION("0.0.1");
 static dev_t dev;
 static struct cdev cdv;
 static struct class *cls = NULL;
+static volatile u32 *gpio_base = NULL;
 
 static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)
 {
@@ -18,7 +20,14 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_
 	if(copy_from_user(&c, buf, sizeof(char)))
 		return -EFAULT;
 
-	printk(KERN_INFO "receive %c\n", c);
+	//printk(KERN_INFO "receive %c\n", c);
+	
+	if(c == '0'){
+		gpio_base[10] = 1 << 25;
+	}
+	else if(c == '1'){
+		gpio_base[7] = 1 << 25;
+	}
 	return 1;
 }
 
@@ -65,6 +74,17 @@ static int __init init_mod(void)
 		return PTR_ERR(cls);
 	}
 	device_create(cls, NULL, dev, NULL, "myled%d", MINOR(dev));
+
+	gpio_base = ioremap_nocache(0xfe200000, 0xA0);
+
+	const u32 led = 25;
+	const u32 index = led / 10;
+	const u32 shift = (led % 10) * 3;
+	const u32 mask = ~(0x7 << shift);
+	gpio_base[index] = (gpio_base[index] & mask) | (0x1 << shift);
+
+
+
 	return 0;
 }
 

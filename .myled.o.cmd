@@ -797,6 +797,23 @@ deps_/home/ubuntu/myled/myled.o := \
     $(wildcard include/config/have/arch/huge/vmap.h) \
     $(wildcard include/config/x86/espfix64.h) \
   arch/arm64/include/asm/extable.h \
+  include/linux/io.h \
+    $(wildcard include/config/has/ioport/map.h) \
+    $(wildcard include/config/pci.h) \
+  arch/arm64/include/asm/io.h \
+  arch/arm64/include/generated/asm/early_ioremap.h \
+  include/asm-generic/early_ioremap.h \
+    $(wildcard include/config/generic/early/ioremap.h) \
+  include/asm-generic/io.h \
+    $(wildcard include/config/generic/iomap.h) \
+    $(wildcard include/config/virt/to/bus.h) \
+  include/asm-generic/pci_iomap.h \
+    $(wildcard include/config/no/generic/pci/ioport/map.h) \
+    $(wildcard include/config/generic/pci/iomap.h) \
+  include/linux/logic_pio.h \
+    $(wildcard include/config/indirect/pio.h) \
+  include/linux/fwnode.h \
+  include/linux/vmalloc.h \
 
 /home/ubuntu/myled/myled.o: $(deps_/home/ubuntu/myled/myled.o)
 
