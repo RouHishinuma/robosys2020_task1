@@ -4,8 +4,13 @@
 #include <linux/device.h>
 #include <linux/uaccess.h>
 #include <linux/io.h>
+//#include <linux/gpio.h>
+#include <linux/delay.h>
+
+//#define PWM_BASECLK 27000000
+
 MODULE_AUTHOR("Haruki Shimotori and Ryuchi Ueda");
-MODULE_DESCRIPTION("driver for LED control");
+MODULE_DESCRIPTION("driver for irLED control");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("0.0.1");
 
@@ -13,6 +18,7 @@ static dev_t dev;
 static struct cdev cdv;
 static struct class *cls = NULL;
 static volatile u32 *gpio_base = NULL;
+
 
 static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)
 {
@@ -22,11 +28,14 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_
 
 	//printk(KERN_INFO "receive %c\n", c);
 	
-	if(c == '0'){
-		gpio_base[10] = 1 << 25;
+	if(c == '0'){ 
+		gpio_base[10] = 1 << 25; //off
+
 	}
-	else if(c == '1'){
-		gpio_base[7] = 1 << 25;
+	else if(c == '1'){ 
+		gpio_base[7] = 1 << 25; //on
+		mdelay(1000);
+		gpio_base[10] = 1 << 25; //off
 	}
 	return 1;
 }

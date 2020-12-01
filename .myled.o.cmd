@@ -814,6 +814,9 @@ deps_/home/ubuntu/myled/myled.o := \
     $(wildcard include/config/indirect/pio.h) \
   include/linux/fwnode.h \
   include/linux/vmalloc.h \
+  include/linux/delay.h \
+  arch/arm64/include/generated/asm/delay.h \
+  include/asm-generic/delay.h \
 
 /home/ubuntu/myled/myled.o: $(deps_/home/ubuntu/myled/myled.o)
 
