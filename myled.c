@@ -4,10 +4,10 @@
 #include <linux/device.h>
 #include <linux/uaccess.h>
 #include <linux/io.h>
-//#include <linux/gpio.h>
 #include <linux/delay.h>
-
-//#define PWM_BASECLK 27000000
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/timer.h>
 
 MODULE_AUTHOR("Haruki Shimotori and Ryuchi Ueda");
 MODULE_DESCRIPTION("driver for irLED control");
@@ -18,7 +18,7 @@ static dev_t dev;
 static struct cdev cdv;
 static struct class *cls = NULL;
 static volatile u32 *gpio_base = NULL;
-
+struct timer_list timer0;
 
 static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)
 {
@@ -53,6 +53,24 @@ static ssize_t sushi_read(struct file* filp, char* buf, size_t count, loff_t* po
 
 	return size;
 }
+
+void timer0_callback(struct timer_list *timer){
+
+	static int flag = 0;
+
+	if(flag == 0){
+		gpio_base[7] = 1 << 25; //on
+		flag = 1;
+	}
+	else{
+		gpio_base[10] = 1 << 25; //off
+		flag = 0;
+	}
+
+	mod_timer (&timer0, jiffies + ( msecs_to_jiffies(500)));
+
+}
+
 static struct file_operations led_fops = {
 	.owner = THIS_MODULE,
 	.write = led_write,
@@ -92,7 +110,10 @@ static int __init init_mod(void)
 	const u32 mask = ~(0x7 << shift);
 	gpio_base[index] = (gpio_base[index] & mask) | (0x1 << shift);
 
-
+	//-----Timer setup------//
+	
+	timer_setup(&timer0, timer0_callback, 0);
+	mod_timer(&timer0, jiffies + msecs_to_jiffies(500));
 
 	return 0;
 }
@@ -104,6 +125,9 @@ static void __exit cleanup_mod(void)
 	class_destroy(cls);
 	unregister_chrdev_region(dev, 1);
 	printk(KERN_INFO "%s is unloaded. mojor:%d\n", __FILE__, MAJOR(dev));
+	
+	//-----Timer delete----//
+	del_timer(&timer0);
 }
 
 module_init(init_mod);    
