@@ -8,6 +8,7 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/timer.h>
+#include <linux/time.h>
 
 MODULE_AUTHOR("Haruki Shimotori and Ryuchi Ueda");
 MODULE_DESCRIPTION("driver for irLED control");
@@ -20,6 +21,24 @@ static struct class *cls = NULL;
 static volatile u32 *gpio_base = NULL;
 struct timer_list timer0;
 
+
+int print_timestamp(void){
+	/*
+	struct timespec time;
+	long timestamp;
+
+	getnstimeofday(&time);
+	timestamp = time.tv_sec + time.tv_nsec;
+	*/
+	
+	//printk(KERN_INFO "time = %ld nsec. \n", timestamp);
+	ock_gettime(before);
+	recv()
+		clock_gettime(after);
+	global_time += after - before.
+	printk(KERN_INFO "time = %ld nsec. \n", timestamp);
+	return 0;
+}
 static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)
 {
 	char c;
@@ -66,6 +85,7 @@ void timer0_callback(struct timer_list *timer){
 		gpio_base[10] = 1 << 25; //off
 		flag = 0;
 	}
+	print_timestamp();
 
 	mod_timer (&timer0, jiffies + ( msecs_to_jiffies(500)));
 
