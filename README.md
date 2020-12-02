@@ -7,6 +7,9 @@
 ## 回路
 
 
+## 信号
+
+![0](https://github.com/shimotoriharuki/robosys2020_task1/blob/master/imgs/irremocon_0.png)
 
 ## 使用方法
 
