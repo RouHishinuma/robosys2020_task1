@@ -23,9 +23,23 @@ static struct class *cls = NULL;
 static volatile u32 *gpio_base = NULL;
 struct timer_list timer0;
 
-void irled_write(int state)
+void irled_write(char state)
 {
-	if(state == 0){ 
+	if(state == '0'){ 
+		volatile int i = 0;	
+		for(i = 0; i < 28; i++){ //high 0.8[ms]
+			gpio_base[7] = 1 << 25; //on
+			udelay(CAREER_TIME);
+			gpio_base[10] = 1 << 25; //off
+			udelay(CAREER_TIME);
+		}
+		for(i = 0; i < 14; i++){ //low 0.4 [ms]
+			udelay(CAREER_TIME);
+			udelay(CAREER_TIME);
+		}
+
+	}
+	else if(state == '1'){ 
 		volatile int i = 0;	
 		for(i = 0; i < 28; i++){ //high 0.8[ms]
 			gpio_base[7] = 1 << 25; //on
@@ -35,6 +49,30 @@ void irled_write(int state)
 		}
 		for(i = 0; i < 63; i++){ //low 1.6 [ms]
 			udelay(CAREER_TIME);
+			udelay(CAREER_TIME);
+		}
+
+	}
+	else if(state == 's'){ 
+		volatile int i = 0;	
+		for(i = 0; i < 450; i++){ //high 12[ms]
+			gpio_base[7] = 1 << 25; //on
+			udelay(CAREER_TIME);
+			gpio_base[10] = 1 << 25; //off
+			udelay(CAREER_TIME);
+		}
+		for(i = 0; i < 157; i++){ //low 4 [ms]
+			udelay(CAREER_TIME);
+			udelay(CAREER_TIME);
+		}
+
+	}
+	else if(state == 'e'){ 
+		volatile int i = 0;	
+		for(i = 0; i < 28; i++){ //high 0.8[ms]
+			gpio_base[7] = 1 << 25; //on
+			udelay(CAREER_TIME);
+			gpio_base[10] = 1 << 25; //off
 			udelay(CAREER_TIME);
 		}
 
@@ -65,7 +103,10 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_
 		*/
 		int i;
 		for(i = 0; i < 50; i++){
-			irled_write(0);
+			//irled_write('s');
+			//irled_write('0');
+			//irled_write('1');
+			irled_write('e');
 		}
 	}
 	return 1;
