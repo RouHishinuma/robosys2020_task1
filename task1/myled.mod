@@ -1,2 +1,2 @@
-/home/ubuntu/robosys2020/task1/myled.o
+/home/ubuntu/robosys2020_task1/task1/myled.o
 

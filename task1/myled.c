@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-only
+/*
+     Copyright (C) 2020  Haruki Shimotori. All right reserved.
+*/
+
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/cdev.h>
@@ -13,7 +18,7 @@
 #define CAREER_TIME 13 // [us]
 
 MODULE_AUTHOR("Haruki Shimotori and Ryuchi Ueda");
-MODULE_DESCRIPTION("driver for irLED control");
+MODULE_DESCRIPTION("driver for ir remote controller control");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("0.0.1");
 
@@ -75,7 +80,6 @@ void irled_write(char state)
 			gpio_base[10] = 1 << 25; //off
 			udelay(CAREER_TIME);
 		}
-
 	}
 }
 
@@ -87,106 +91,58 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_
 
 	//printk(KERN_INFO "receive %c\n", c);
 	
-	if(c == '0'){ 
-		gpio_base[10] = 1 << 25; //off
+	if(c == '1'){
+		irled_write('s');
 
-	}
-	else if(c == '1'){
-		/*
-		volatile int i = 0;	
-		for(i = 0; i < 100000; i++){
-			gpio_base[7] = 1 << 25; //on
-			udelay(CAREER_TIME);
-			gpio_base[10] = 1 << 25; //off
-			udelay(CAREER_TIME);
-		}
-		*/
-		int i;
-		for(i = 0; i < 1; i++){
-			irled_write('s');
+		irled_write('0');
+		irled_write('1');
+		irled_write('1');
+		irled_write('0');
 
-			irled_write('0');
-			irled_write('1');
-			irled_write('1');
-			irled_write('0');
+		irled_write('0');
+		irled_write('0');
+		irled_write('0');
+		irled_write('0');
 
-			irled_write('0');
-			irled_write('0');
-			irled_write('0');
-			irled_write('0');
+		irled_write('1');
+		irled_write('1');
+		irled_write('0');
+		irled_write('0');
 
-			irled_write('1');
-			irled_write('1');
-			irled_write('0');
-			irled_write('0');
+		irled_write('0');
+		irled_write('1');
+		irled_write('0');
+		irled_write('1');
 
-			irled_write('0');
-			irled_write('1');
-			irled_write('0');
-			irled_write('1');
+		irled_write('0');
+		irled_write('0');
+		irled_write('0');
+		irled_write('0');
 
-			irled_write('0');
-			irled_write('0');
-			irled_write('0');
-			irled_write('0');
+		irled_write('1');
+		irled_write('1');
+		irled_write('1');
+		irled_write('0');
 
-			irled_write('1');
-			irled_write('1');
-			irled_write('1');
-			irled_write('0');
+		irled_write('0');
+		irled_write('0');
+		irled_write('0');
+		irled_write('0');
 
-			irled_write('0');
-			irled_write('0');
-			irled_write('0');
-			irled_write('0');
+		irled_write('0');
+		irled_write('1');
+		irled_write('1');
+		irled_write('1');
+		irled_write('1');
 
-			irled_write('0');
-			irled_write('1');
-			irled_write('1');
-			irled_write('1');
-			irled_write('1');
-
-			irled_write('e');
-		}
+		irled_write('e');
 	}
 	return 1;
-}
-
-
-static ssize_t sushi_read(struct file* filp, char* buf, size_t count, loff_t* pos)
-{
-	int size = 0;
-	char sushi[] = {'s','u', 's', 'h', 'i'};
-	if(copy_to_user(buf + size, (const char *)sushi, sizeof(sushi))){
-		printk(KERN_ERR "sushi : popy_to_user failed\n");
-		return -EFAULT;
-	}
-	size += sizeof(sushi);
-
-	return size;
-}
-
-void timer0_callback(struct timer_list *timer){
-
-	static int flag = 0;
-
-	if(flag == 0){
-		gpio_base[7] = 1 << 25; //on
-		flag = 1;
-	}
-	else{
-		gpio_base[10] = 1 << 25; //off
-		flag = 0;
-	}
-
-	mod_timer (&timer0, jiffies + ( usecs_to_jiffies(CAREER_TIME)));
-
 }
 
 static struct file_operations led_fops = {
 	.owner = THIS_MODULE,
 	.write = led_write,
-	.read = sushi_read
 };
 
 static int __init init_mod(void) 
@@ -222,11 +178,6 @@ static int __init init_mod(void)
 	const u32 mask = ~(0x7 << shift);
 	gpio_base[index] = (gpio_base[index] & mask) | (0x1 << shift);
 
-	//-----Timer setup------//
-/*	
-	timer_setup(&timer0, timer0_callback, 0);
-	mod_timer(&timer0, jiffies + usecs_to_jiffies(CAREER_TIME));
-*/
 	return 0;
 }
 
@@ -238,8 +189,6 @@ static void __exit cleanup_mod(void)
 	unregister_chrdev_region(dev, 1);
 	printk(KERN_INFO "%s is unloaded. mojor:%d\n", __FILE__, MAJOR(dev));
 	
-	//-----Timer delete----//
-	del_timer(&timer0);
 }
 
 module_init(init_mod);    
