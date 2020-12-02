@@ -102,10 +102,50 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_
 		}
 		*/
 		int i;
-		for(i = 0; i < 50; i++){
-			//irled_write('s');
-			//irled_write('0');
-			//irled_write('1');
+		for(i = 0; i < 1; i++){
+			irled_write('s');
+
+			irled_write('0');
+			irled_write('1');
+			irled_write('1');
+			irled_write('0');
+
+			irled_write('0');
+			irled_write('0');
+			irled_write('0');
+			irled_write('0');
+
+			irled_write('1');
+			irled_write('1');
+			irled_write('0');
+			irled_write('0');
+
+			irled_write('0');
+			irled_write('1');
+			irled_write('0');
+			irled_write('1');
+
+			irled_write('0');
+			irled_write('0');
+			irled_write('0');
+			irled_write('0');
+
+			irled_write('1');
+			irled_write('1');
+			irled_write('1');
+			irled_write('0');
+
+			irled_write('0');
+			irled_write('0');
+			irled_write('0');
+			irled_write('0');
+
+			irled_write('0');
+			irled_write('1');
+			irled_write('1');
+			irled_write('1');
+			irled_write('1');
+
 			irled_write('e');
 		}
 	}
