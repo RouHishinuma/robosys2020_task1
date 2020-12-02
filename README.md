@@ -75,3 +75,10 @@ $ echo 1 > /dev/myled0
 ```shell
 sudo rmmod myled
 ```
+
+## 動作
+
+扇風機をON, OFFしている様子です。音を出すと動作している様子が分かりやすいと思います。
+
+[![](http://img.youtube.com/vi/x7nqdgcpI9w/0.jpg)](http://www.youtube.com/watch?v=x7nqdgcpI9w "")
+
