@@ -10,6 +10,8 @@
 #include <linux/timer.h>
 #include <linux/time.h>
 
+#define CAREER_TIME 13.16 // [us]
+
 MODULE_AUTHOR("Haruki Shimotori and Ryuchi Ueda");
 MODULE_DESCRIPTION("driver for irLED control");
 MODULE_LICENSE("GPL");
@@ -21,24 +23,6 @@ static struct class *cls = NULL;
 static volatile u32 *gpio_base = NULL;
 struct timer_list timer0;
 
-
-int print_timestamp(void){
-	/*
-	struct timespec time;
-	long timestamp;
-
-	getnstimeofday(&time);
-	timestamp = time.tv_sec + time.tv_nsec;
-	*/
-	
-	//printk(KERN_INFO "time = %ld nsec. \n", timestamp);
-	ock_gettime(before);
-	recv()
-		clock_gettime(after);
-	global_time += after - before.
-	printk(KERN_INFO "time = %ld nsec. \n", timestamp);
-	return 0;
-}
 static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)
 {
 	char c;
@@ -51,10 +35,14 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_
 		gpio_base[10] = 1 << 25; //off
 
 	}
-	else if(c == '1'){ 
-		gpio_base[7] = 1 << 25; //on
-		mdelay(1000);
-		gpio_base[10] = 1 << 25; //off
+	else if(c == '1'){
+		volatile int i = 0;	
+		for(i = 0; i < 100000; i++){
+			gpio_base[7] = 1 << 25; //on
+			udelay(CAREER_TIME);
+			gpio_base[10] = 1 << 25; //off
+			udelay(CAREER_TIME);
+		}
 	}
 	return 1;
 }
@@ -85,9 +73,8 @@ void timer0_callback(struct timer_list *timer){
 		gpio_base[10] = 1 << 25; //off
 		flag = 0;
 	}
-	print_timestamp();
 
-	mod_timer (&timer0, jiffies + ( msecs_to_jiffies(500)));
+	mod_timer (&timer0, jiffies + ( usecs_to_jiffies(CAREER_TIME)));
 
 }
 
@@ -131,10 +118,10 @@ static int __init init_mod(void)
 	gpio_base[index] = (gpio_base[index] & mask) | (0x1 << shift);
 
 	//-----Timer setup------//
-	
+/*	
 	timer_setup(&timer0, timer0_callback, 0);
-	mod_timer(&timer0, jiffies + msecs_to_jiffies(500));
-
+	mod_timer(&timer0, jiffies + usecs_to_jiffies(CAREER_TIME));
+*/
 	return 0;
 }
 
