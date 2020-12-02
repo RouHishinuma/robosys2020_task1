@@ -10,10 +10,6 @@
 #include <linux/uaccess.h>
 #include <linux/io.h>
 #include <linux/delay.h>
-#include <linux/kernel.h>
-#include <linux/module.h>
-#include <linux/timer.h>
-#include <linux/time.h>
 
 #define CAREER_TIME 13 // [us]
 
