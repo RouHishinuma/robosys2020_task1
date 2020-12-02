@@ -10,7 +10,7 @@
 #include <linux/timer.h>
 #include <linux/time.h>
 
-#define CAREER_TIME 13.16 // [us]
+#define CAREER_TIME 13 // [us]
 
 MODULE_AUTHOR("Haruki Shimotori and Ryuchi Ueda");
 MODULE_DESCRIPTION("driver for irLED control");
@@ -22,6 +22,24 @@ static struct cdev cdv;
 static struct class *cls = NULL;
 static volatile u32 *gpio_base = NULL;
 struct timer_list timer0;
+
+void irled_write(int state)
+{
+	if(state == 0){ 
+		volatile int i = 0;	
+		for(i = 0; i < 28; i++){ //high 0.8[ms]
+			gpio_base[7] = 1 << 25; //on
+			udelay(CAREER_TIME);
+			gpio_base[10] = 1 << 25; //off
+			udelay(CAREER_TIME);
+		}
+		for(i = 0; i < 63; i++){ //low 1.6 [ms]
+			udelay(CAREER_TIME);
+			udelay(CAREER_TIME);
+		}
+
+	}
+}
 
 static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)
 {
@@ -36,12 +54,18 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_
 
 	}
 	else if(c == '1'){
+		/*
 		volatile int i = 0;	
 		for(i = 0; i < 100000; i++){
 			gpio_base[7] = 1 << 25; //on
 			udelay(CAREER_TIME);
 			gpio_base[10] = 1 << 25; //off
 			udelay(CAREER_TIME);
+		}
+		*/
+		int i;
+		for(i = 0; i < 50; i++){
+			irled_write(0);
 		}
 	}
 	return 1;
