@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /*
-     Copyright (C) 2020  Haruki Shimotori and Ryuichi Ueda. All right reserved.
+     Copyright (C) 2020  Haruki Shimotori. All right reserved.
 */
 
 #include <linux/module.h>
@@ -13,7 +13,7 @@
 
 #define CAREER_TIME 13 // [us]
 
-MODULE_AUTHOR("Haruki Shimotori and Ryuichi Ueda");
+MODULE_AUTHOR("Haruki Shimotori and Ryuchi Ueda");
 MODULE_DESCRIPTION("driver for ir remote controller control");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("0.0.1");
