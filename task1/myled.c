@@ -79,6 +79,54 @@ void irled_write(char state)
 	}
 }
 
+void fan_on_off(void)
+{
+	irled_write('s');
+
+	irled_write('0');
+	irled_write('1');
+	irled_write('1');
+	irled_write('0');
+
+	irled_write('0');
+	irled_write('0');
+	irled_write('0');
+	irled_write('0');
+
+	irled_write('1');
+	irled_write('1');
+	irled_write('0');
+	irled_write('0');
+
+	irled_write('0');
+	irled_write('1');
+	irled_write('0');
+	irled_write('1');
+
+	irled_write('0');
+	irled_write('0');
+	irled_write('0');
+	irled_write('0');
+
+	irled_write('1');
+	irled_write('1');
+	irled_write('1');
+	irled_write('0');
+
+	irled_write('0');
+	irled_write('0');
+	irled_write('0');
+	irled_write('0');
+
+	irled_write('0');
+	irled_write('1');
+	irled_write('1');
+	irled_write('1');
+	irled_write('1');
+
+	irled_write('e');
+
+}
 static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)
 {
 	char c;
@@ -88,50 +136,7 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_
 	//printk(KERN_INFO "receive %c\n", c);
 	
 	if(c == '1'){
-		irled_write('s');
-
-		irled_write('0');
-		irled_write('1');
-		irled_write('1');
-		irled_write('0');
-
-		irled_write('0');
-		irled_write('0');
-		irled_write('0');
-		irled_write('0');
-
-		irled_write('1');
-		irled_write('1');
-		irled_write('0');
-		irled_write('0');
-
-		irled_write('0');
-		irled_write('1');
-		irled_write('0');
-		irled_write('1');
-
-		irled_write('0');
-		irled_write('0');
-		irled_write('0');
-		irled_write('0');
-
-		irled_write('1');
-		irled_write('1');
-		irled_write('1');
-		irled_write('0');
-
-		irled_write('0');
-		irled_write('0');
-		irled_write('0');
-		irled_write('0');
-
-		irled_write('0');
-		irled_write('1');
-		irled_write('1');
-		irled_write('1');
-		irled_write('1');
-
-		irled_write('e');
+		fan_on_off();
 	}
 	return 1;
 }
