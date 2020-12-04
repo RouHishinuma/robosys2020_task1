@@ -44,7 +44,7 @@ Raspberry Pi4のGPIO25に赤外線LEDを接続します。抵抗は手元に390[
 
 ![hz](https://github.com/shimotoriharuki/robosys2020_task1/blob/master/imgs/irremocon_hz.png)
 
-※追記
+※追記：
 キャリア周波数のduty比は、一般的には1/3だと思いますが、完全に忘れていたので1/2で実装されています。duty比1/2でも動いているのであまり気にしないことにします。
 
 ## 送信する信号
