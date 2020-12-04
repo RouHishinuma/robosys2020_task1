@@ -44,6 +44,9 @@ Raspberry Pi4のGPIO25に赤外線LEDを接続します。抵抗は手元に390[
 
 ![hz](https://github.com/shimotoriharuki/robosys2020_task1/blob/master/imgs/irremocon_hz.png)
 
+※追記
+キャリア周波数のduty比は、一般的には1/3だと思いますが、完全に忘れていたので1/2で実装されています。duty比1/2でも動いているのであまり気にしないことにします。
+
 ## 送信する信号
 
 扇風機を操作する具体的な信号は、扇風機の赤外線リモコンから発せられる赤外線を赤外線受光モジュール（PL-IRM0101）で受信し、以下の画像のようにオシロスコープを使って読み取りました。
@@ -82,3 +85,8 @@ sudo rmmod myled
 
 [![](http://img.youtube.com/vi/x7nqdgcpI9w/0.jpg)](http://www.youtube.com/watch?v=x7nqdgcpI9w "")
 
+## 参考文献
+
+赤外線通信の方法を思い出すために、以下のサイトを参考にしました。
+
+- [赤外線リモコンの通信フォーマット](http://elm-chan.org/docs/ir_format.html)
